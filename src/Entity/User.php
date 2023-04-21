@@ -49,9 +49,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Plant::class, orphanRemoval: true)]
     private Collection $plants;
 
+    #[ORM\OneToMany(mappedBy: 'sender', targetEntity: Message::class, orphanRemoval: true)]
+    private Collection $messages;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: PlantSitting::class, orphanRemoval: true)]
+    private Collection $plantSittings;
+
     public function __construct()
     {
         $this->plants = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->plantSittings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -222,6 +230,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($plant->getUser() === $this) {
                 $plant->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getSender() === $this) {
+                $message->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PlantSitting>
+     */
+    public function getPlantSittings(): Collection
+    {
+        return $this->plantSittings;
+    }
+
+    public function addPlantSitting(PlantSitting $plantSitting): self
+    {
+        if (!$this->plantSittings->contains($plantSitting)) {
+            $this->plantSittings->add($plantSitting);
+            $plantSitting->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlantSitting(PlantSitting $plantSitting): self
+    {
+        if ($this->plantSittings->removeElement($plantSitting)) {
+            // set the owning side to null (unless already changed)
+            if ($plantSitting->getUser() === $this) {
+                $plantSitting->setUser(null);
             }
         }
 

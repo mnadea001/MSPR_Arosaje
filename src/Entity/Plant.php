@@ -34,9 +34,13 @@ class Plant
     #[ORM\ManyToMany(targetEntity: Advice::class, mappedBy: 'plant')]
     private Collection $advice;
 
+    #[ORM\ManyToMany(targetEntity: PlantSitting::class, mappedBy: 'plant')]
+    private Collection $plantSittings;
+
     public function __construct()
     {
         $this->advice = new ArrayCollection();
+        $this->plantSittings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -126,6 +130,33 @@ class Plant
     {
         if ($this->advice->removeElement($advice)) {
             $advice->removePlant($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PlantSitting>
+     */
+    public function getPlantSittings(): Collection
+    {
+        return $this->plantSittings;
+    }
+
+    public function addPlantSitting(PlantSitting $plantSitting): self
+    {
+        if (!$this->plantSittings->contains($plantSitting)) {
+            $this->plantSittings->add($plantSitting);
+            $plantSitting->addPlant($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlantSitting(PlantSitting $plantSitting): self
+    {
+        if ($this->plantSittings->removeElement($plantSitting)) {
+            $plantSitting->removePlant($this);
         }
 
         return $this;
