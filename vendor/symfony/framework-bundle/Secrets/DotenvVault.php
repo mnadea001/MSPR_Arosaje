@@ -13,10 +13,12 @@ namespace Symfony\Bundle\FrameworkBundle\Secrets;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
+ *
+ * @internal
  */
 class DotenvVault extends AbstractVault
 {
-    private string $dotenvFile;
+    private $dotenvFile;
 
     public function __construct(string $dotenvFile)
     {

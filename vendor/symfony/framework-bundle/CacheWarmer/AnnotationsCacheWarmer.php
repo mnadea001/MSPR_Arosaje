@@ -25,9 +25,9 @@ use Symfony\Component\Cache\Adapter\PhpArrayAdapter;
  */
 class AnnotationsCacheWarmer extends AbstractPhpFileCacheWarmer
 {
-    private Reader $annotationReader;
-    private ?string $excludeRegexp;
-    private bool $debug;
+    private $annotationReader;
+    private $excludeRegexp;
+    private $debug;
 
     /**
      * @param string $phpArrayFile The PHP file where annotations are cached
@@ -40,7 +40,10 @@ class AnnotationsCacheWarmer extends AbstractPhpFileCacheWarmer
         $this->debug = $debug;
     }
 
-    protected function doWarmUp(string $cacheDir, ArrayAdapter $arrayAdapter): bool
+    /**
+     * {@inheritdoc}
+     */
+    protected function doWarmUp(string $cacheDir, ArrayAdapter $arrayAdapter)
     {
         $annotatedClassPatterns = $cacheDir.'/annotations.map';
 
@@ -68,7 +71,7 @@ class AnnotationsCacheWarmer extends AbstractPhpFileCacheWarmer
     /**
      * @return string[] A list of classes to preload on PHP 7.4+
      */
-    protected function warmUpPhpArrayAdapter(PhpArrayAdapter $phpArrayAdapter, array $values): array
+    protected function warmUpPhpArrayAdapter(PhpArrayAdapter $phpArrayAdapter, array $values)
     {
         // make sure we don't cache null values
         $values = array_filter($values, function ($val) { return null !== $val; });
@@ -82,7 +85,7 @@ class AnnotationsCacheWarmer extends AbstractPhpFileCacheWarmer
 
         try {
             $reader->getClassAnnotations($reflectionClass);
-        } catch (AnnotationException) {
+        } catch (AnnotationException $e) {
             /*
              * Ignore any AnnotationException to not break the cache warming process if an Annotation is badly
              * configured or could not be found / read / etc.
@@ -96,14 +99,14 @@ class AnnotationsCacheWarmer extends AbstractPhpFileCacheWarmer
         foreach ($reflectionClass->getMethods() as $reflectionMethod) {
             try {
                 $reader->getMethodAnnotations($reflectionMethod);
-            } catch (AnnotationException) {
+            } catch (AnnotationException $e) {
             }
         }
 
         foreach ($reflectionClass->getProperties() as $reflectionProperty) {
             try {
                 $reader->getPropertyAnnotations($reflectionProperty);
-            } catch (AnnotationException) {
+            } catch (AnnotationException $e) {
             }
         }
     }

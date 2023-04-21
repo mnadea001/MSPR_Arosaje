@@ -55,7 +55,6 @@ return static function (ContainerConfigurator $container) {
                 abstract_arg('senders service locator'),
             ])
         ->set('messenger.middleware.send_message', SendMessageMiddleware::class)
-            ->abstract()
             ->args([
                 service('messenger.senders_locator'),
                 service('event_dispatcher'),
@@ -160,11 +159,6 @@ return static function (ContainerConfigurator $container) {
                 abstract_arg('multiplier'),
                 abstract_arg('max delay ms'),
             ])
-
-        // rate limiter
-        ->set('messenger.rate_limiter_locator', ServiceLocator::class)
-            ->args([[]])
-            ->tag('container.service_locator')
 
         // worker event listener
         ->set('messenger.retry.send_failed_message_for_retry_listener', SendFailedMessageForRetryListener::class)

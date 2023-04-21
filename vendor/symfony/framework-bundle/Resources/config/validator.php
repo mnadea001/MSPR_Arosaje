@@ -17,7 +17,6 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Validator\Constraints\EmailValidator;
 use Symfony\Component\Validator\Constraints\ExpressionValidator;
 use Symfony\Component\Validator\Constraints\NotCompromisedPasswordValidator;
-use Symfony\Component\Validator\Constraints\WhenValidator;
 use Symfony\Component\Validator\ContainerConstraintValidatorFactory;
 use Symfony\Component\Validator\Mapping\Loader\PropertyInfoLoader;
 use Symfony\Component\Validator\Validation;
@@ -28,11 +27,11 @@ return static function (ContainerConfigurator $container) {
     $container->parameters()
         ->set('validator.mapping.cache.file', param('kernel.cache_dir').'/validation.php');
 
-    $validatorsDir = \dirname((new \ReflectionClass(EmailValidator::class))->getFileName());
-
     $container->services()
         ->set('validator', ValidatorInterface::class)
+            ->public()
             ->factory([service('validator.builder'), 'getValidator'])
+            ->tag('container.private', ['package' => 'symfony/framework-bundle', 'version' => '5.2'])
         ->alias(ValidatorInterface::class, 'validator')
 
         ->set('validator.builder', ValidatorBuilder::class)
@@ -67,15 +66,11 @@ return static function (ContainerConfigurator $container) {
                 abstract_arg('Constraint validators locator'),
             ])
 
-        ->load('Symfony\Component\Validator\Constraints\\', $validatorsDir.'/*Validator.php')
-            ->exclude($validatorsDir.'/ExpressionLanguageSyntaxValidator.php')
-            ->abstract()
-            ->tag('container.excluded')
-            ->tag('validator.constraint_validator')
-
         ->set('validator.expression', ExpressionValidator::class)
             ->args([service('validator.expression_language')->nullOnInvalid()])
-            ->tag('validator.constraint_validator')
+            ->tag('validator.constraint_validator', [
+                'alias' => 'validator.expression',
+            ])
 
         ->set('validator.expression_language', ExpressionLanguage::class)
             ->args([service('cache.validator_expression_language')->nullOnInvalid()])
@@ -88,7 +83,9 @@ return static function (ContainerConfigurator $container) {
             ->args([
                 abstract_arg('Default mode'),
             ])
-            ->tag('validator.constraint_validator')
+            ->tag('validator.constraint_validator', [
+                'alias' => EmailValidator::class,
+            ])
 
         ->set('validator.not_compromised_password', NotCompromisedPasswordValidator::class)
             ->args([
@@ -96,11 +93,9 @@ return static function (ContainerConfigurator $container) {
                 param('kernel.charset'),
                 false,
             ])
-            ->tag('validator.constraint_validator')
-
-        ->set('validator.when', WhenValidator::class)
-            ->args([service('validator.expression_language')->nullOnInvalid()])
-            ->tag('validator.constraint_validator')
+            ->tag('validator.constraint_validator', [
+                'alias' => NotCompromisedPasswordValidator::class,
+            ])
 
         ->set('validator.property_info_loader', PropertyInfoLoader::class)
             ->args([

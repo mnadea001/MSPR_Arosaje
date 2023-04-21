@@ -13,7 +13,6 @@ namespace Symfony\Bundle\FrameworkBundle\Command;
 
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,18 +27,30 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
 use Symfony\Component\HttpKernel\Kernel;
 
-#[AsCommand(name: 'lint:container', description: 'Ensure that arguments injected into services match type declarations')]
 final class ContainerLintCommand extends Command
 {
-    private ContainerBuilder $containerBuilder;
+    protected static $defaultName = 'lint:container';
+    protected static $defaultDescription = 'Ensure that arguments injected into services match type declarations';
 
+    /**
+     * @var ContainerBuilder
+     */
+    private $containerBuilder;
+
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
+            ->setDescription(self::$defaultDescription)
             ->setHelp('This command parses service definitions and ensures that injected values match the type declarations of each services\' class.')
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -70,7 +81,7 @@ final class ContainerLintCommand extends Command
 
     private function getContainerBuilder(): ContainerBuilder
     {
-        if (isset($this->containerBuilder)) {
+        if ($this->containerBuilder) {
             return $this->containerBuilder;
         }
 
@@ -86,7 +97,7 @@ final class ContainerLintCommand extends Command
                 $this->initializeBundles();
 
                 return $this->buildContainer();
-            }, $kernel, $kernel::class);
+            }, $kernel, \get_class($kernel));
             $container = $buildContainer();
 
             $skippedIds = [];
@@ -98,6 +109,7 @@ final class ContainerLintCommand extends Command
             (new XmlFileLoader($container = new ContainerBuilder($parameterBag = new EnvPlaceholderParameterBag()), new FileLocator()))->load($kernelContainer->getParameter('debug.container.dump'));
 
             $refl = new \ReflectionProperty($parameterBag, 'resolved');
+            $refl->setAccessible(true);
             $refl->setValue($parameterBag, true);
 
             $skippedIds = [];

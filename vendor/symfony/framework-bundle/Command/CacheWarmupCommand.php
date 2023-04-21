@@ -11,7 +11,6 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Command;
 
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -27,10 +26,12 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
  *
  * @final
  */
-#[AsCommand(name: 'cache:warmup', description: 'Warm up an empty cache')]
 class CacheWarmupCommand extends Command
 {
-    private CacheWarmerAggregate $cacheWarmer;
+    protected static $defaultName = 'cache:warmup';
+    protected static $defaultDescription = 'Warm up an empty cache';
+
+    private $cacheWarmer;
 
     public function __construct(CacheWarmerAggregate $cacheWarmer)
     {
@@ -39,12 +40,16 @@ class CacheWarmupCommand extends Command
         $this->cacheWarmer = $cacheWarmer;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
             ->setDefinition([
                 new InputOption('no-optional-warmers', '', InputOption::VALUE_NONE, 'Skip optional cache warmers (faster)'),
             ])
+            ->setDescription(self::$defaultDescription)
             ->setHelp(<<<'EOF'
 The <info>%command.name%</info> command warms up the cache.
 
@@ -55,6 +60,9 @@ EOF
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
