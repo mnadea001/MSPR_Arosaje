@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PlantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlantRepository::class)]
@@ -28,6 +30,14 @@ class Plant
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToMany(targetEntity: Advice::class, mappedBy: 'plant')]
+    private Collection $advice;
+
+    public function __construct()
+    {
+        $this->advice = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -90,6 +100,33 @@ class Plant
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Advice>
+     */
+    public function getAdvice(): Collection
+    {
+        return $this->advice;
+    }
+
+    public function addAdvice(Advice $advice): self
+    {
+        if (!$this->advice->contains($advice)) {
+            $this->advice->add($advice);
+            $advice->addPlant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdvice(Advice $advice): self
+    {
+        if ($this->advice->removeElement($advice)) {
+            $advice->removePlant($this);
+        }
 
         return $this;
     }
