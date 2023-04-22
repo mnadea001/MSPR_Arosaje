@@ -2,17 +2,16 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\User;
+use App\Entity\Botanist;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class UserCrudController extends AbstractCrudController
+class BotanistCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return User::class;
+        return Botanist::class;
     }
 
 
@@ -20,6 +19,8 @@ class UserCrudController extends AbstractCrudController
     {
         return [
             // IdField::new('id'),
+            // TextField::new('title'),
+            // TextEditorField::new('description'),
             TextField::new('email'),
             TextField::new('username'),
             
@@ -29,7 +30,6 @@ class UserCrudController extends AbstractCrudController
             
             TextField::new('country'),
             ArrayField::new('roles'),
-            // TextEditorField::new('description'),
         ];
     }
 

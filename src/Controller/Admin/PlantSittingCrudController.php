@@ -6,6 +6,7 @@ use App\Entity\PlantSitting;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class PlantSittingCrudController extends AbstractCrudController
 {
@@ -19,8 +20,7 @@ class PlantSittingCrudController extends AbstractCrudController
     {
         return [
             // IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            // TextEditorField::new('description'),
         ];
     }
     
