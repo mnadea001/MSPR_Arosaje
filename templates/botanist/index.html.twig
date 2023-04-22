@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Botanist index{% endblock %}
+
+{% block body %}
+    <h1>Botanist index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>Username</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for botanist in botanists %}
+            <tr>
+                <td>{{ botanist.id }}</td>
+                <td>{{ botanist.email }}</td>
+                <td>{{ botanist.roles ? botanist.roles|json_encode : '' }}</td>
+                <td>{{ botanist.password }}</td>
+                <td>{{ botanist.username }}</td>
+                <td>{{ botanist.address }}</td>
+                <td>{{ botanist.city }}</td>
+                <td>{{ botanist.country }}</td>
+                <td>{{ botanist.createdAt ? botanist.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_botanist_show', {'id': botanist.id}) }}">show</a>
+                    <a href="{{ path('app_botanist_edit', {'id': botanist.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_botanist_new') }}">Create new</a>
+{% endblock %}

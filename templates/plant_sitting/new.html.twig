@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New PlantSitting{% endblock %}
+
+{% block body %}
+    <h1>Create new PlantSitting</h1>
+
+    {{ include('plant_sitting/_form.html.twig') }}
+
+    <a href="{{ path('app_plant_sitting_index') }}">back to list</a>
+{% endblock %}
