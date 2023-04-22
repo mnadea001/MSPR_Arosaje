@@ -60,12 +60,13 @@ class RegistrationController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('registration/botanist_register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
 
-        return $this->redirectToRoute('app_home');
+       
     }
 }
