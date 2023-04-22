@@ -24,12 +24,16 @@ class Advice
     #[ORM\ManyToMany(targetEntity: Plant::class, inversedBy: 'advice')]
     private Collection $plant;
 
+    #[ORM\Column(type: 'datetime_immutable')]
+   private $createdAt;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\ManyToOne(inversedBy: 'advice')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Botanist $botanist = null;
 
     public function __construct()
     {
+        $this->defaultCreatedAt();
         $this->plant = new ArrayCollection();
     }
 
@@ -94,6 +98,26 @@ class Advice
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function defaultCreatedAt()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    public function getBotanist(): ?Botanist
+    {
+        return $this->botanist;
+    }
+
+    public function setBotanist(?Botanist $botanist): self
+    {
+        $this->botanist = $botanist;
 
         return $this;
     }

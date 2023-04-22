@@ -29,11 +29,16 @@ class PlantSitting
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $end_date = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\Column(type: 'datetime_immutable')]
+   private $createdAt;
+
+    #[ORM\ManyToOne(inversedBy: 'plantSittings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Botanist $botanist = null;
 
     public function __construct()
     {
+        $this->defaultCreatedAt();
         $this->plant = new ArrayCollection();
     }
 
@@ -110,6 +115,26 @@ class PlantSitting
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function defaultCreatedAt()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    public function getBotanist(): ?Botanist
+    {
+        return $this->botanist;
+    }
+
+    public function setBotanist(?Botanist $botanist): self
+    {
+        $this->botanist = $botanist;
 
         return $this;
     }

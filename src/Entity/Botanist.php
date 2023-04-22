@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BotanistRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -44,10 +46,18 @@ class Botanist implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
+    #[ORM\OneToMany(mappedBy: 'botanist', targetEntity: Advice::class, orphanRemoval: true)]
+    private Collection $advice;
+
+    #[ORM\OneToMany(mappedBy: 'botanist', targetEntity: PlantSitting::class)]
+    private Collection $plantSittings;
+
     public function __construct()
     {
         
         $this->defaultCreatedAt();
+        $this->advice = new ArrayCollection();
+        $this->plantSittings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -197,5 +207,65 @@ class Botanist implements UserInterface, PasswordAuthenticatedUserInterface
     public function defaultCreatedAt()
     {
         $this->createdAt = new \DateTimeImmutable();
+    }
+
+    /**
+     * @return Collection<int, Advice>
+     */
+    public function getAdvice(): Collection
+    {
+        return $this->advice;
+    }
+
+    public function addAdvice(Advice $advice): self
+    {
+        if (!$this->advice->contains($advice)) {
+            $this->advice->add($advice);
+            $advice->setBotanist($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdvice(Advice $advice): self
+    {
+        if ($this->advice->removeElement($advice)) {
+            // set the owning side to null (unless already changed)
+            if ($advice->getBotanist() === $this) {
+                $advice->setBotanist(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PlantSitting>
+     */
+    public function getPlantSittings(): Collection
+    {
+        return $this->plantSittings;
+    }
+
+    public function addPlantSitting(PlantSitting $plantSitting): self
+    {
+        if (!$this->plantSittings->contains($plantSitting)) {
+            $this->plantSittings->add($plantSitting);
+            $plantSitting->setBotanist($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlantSitting(PlantSitting $plantSitting): self
+    {
+        if ($this->plantSittings->removeElement($plantSitting)) {
+            // set the owning side to null (unless already changed)
+            if ($plantSitting->getBotanist() === $this) {
+                $plantSitting->setBotanist(null);
+            }
+        }
+
+        return $this;
     }
 }
