@@ -43,8 +43,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $country = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\Column(type: 'datetime_immutable')]
+   private $createdAt;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Plant::class, orphanRemoval: true)]
     private Collection $plants;
@@ -57,6 +57,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
+        
+        $this->defaultCreatedAt();
         $this->plants = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->plantSittings = new ArrayCollection();
@@ -204,6 +206,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function defaultCreatedAt()
+    {
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     /**
