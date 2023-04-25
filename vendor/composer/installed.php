@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'd57f58fb9d4f6f09de6e1e712ab1d8d6ba3528cd',
+        'reference' => 'de83fa551b9a0d29a46bbd6f8d6b5272119b4f2f',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'd57f58fb9d4f6f09de6e1e712ab1d8d6ba3528cd',
+            'reference' => 'de83fa551b9a0d29a46bbd6f8d6b5272119b4f2f',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -852,6 +852,15 @@
             'install_path' => __DIR__ . '/../symfony/web-link',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'symfony/web-profiler-bundle' => array(
+            'pretty_version' => 'v5.4.21',
+            'version' => '5.4.21.0',
+            'reference' => 'a83337a813d1398789bf4190a56dc3c4d8cc4d93',
+            'type' => 'symfony-bundle',
+            'install_path' => __DIR__ . '/../symfony/web-profiler-bundle',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'symfony/yaml' => array(
             'pretty_version' => 'v5.4.21',
