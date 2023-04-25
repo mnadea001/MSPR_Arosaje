@@ -28,65 +28,79 @@ return [
     ],
     [ // $regexpList
         0 => '{^(?'
-                .'|/advice/([^/]++)(?'
-                    .'|(*:26)'
-                    .'|/edit(*:38)'
-                    .'|(*:45)'
+                .'|/a(?'
+                    .'|dvice/([^/]++)(?'
+                        .'|(*:29)'
+                        .'|/edit(*:41)'
+                        .'|(*:48)'
+                    .')'
+                    .'|pi(?'
+                        .'|/\\.well\\-known/genid/([^/]++)(*:90)'
+                        .'|(?:/(index)(?:\\.([^/]++))?)?(*:125)'
+                        .'|/(?'
+                            .'|docs(?:\\.([^/]++))?(*:156)'
+                            .'|contexts/([^.]+)(?:\\.(jsonld))?(*:195)'
+                        .')'
+                    .')'
                 .')'
                 .'|/botanist/([^/]++)(?'
-                    .'|(*:74)'
-                    .'|/edit(*:86)'
-                    .'|(*:93)'
+                    .'|(*:227)'
+                    .'|/edit(*:240)'
+                    .'|(*:248)'
                 .')'
                 .'|/message/([^/]++)(?'
-                    .'|(*:121)'
-                    .'|/edit(*:134)'
-                    .'|(*:142)'
+                    .'|(*:277)'
+                    .'|/edit(*:290)'
+                    .'|(*:298)'
                 .')'
                 .'|/plant/(?'
                     .'|([^/]++)(?'
-                        .'|(*:172)'
-                        .'|/edit(*:185)'
-                        .'|(*:193)'
+                        .'|(*:328)'
+                        .'|/edit(*:341)'
+                        .'|(*:349)'
                     .')'
                     .'|sitting(?'
-                        .'|(*:212)'
+                        .'|(*:368)'
                         .'|/([^/]++)(?'
-                            .'|(*:232)'
-                            .'|/edit(*:245)'
-                            .'|(*:253)'
+                            .'|(*:388)'
+                            .'|/edit(*:401)'
+                            .'|(*:409)'
                         .')'
                     .')'
                 .')'
                 .'|/user/([^/]++)(?'
-                    .'|(*:281)'
-                    .'|/edit(*:294)'
-                    .'|(*:302)'
+                    .'|(*:437)'
+                    .'|/edit(*:450)'
+                    .'|(*:458)'
                 .')'
-                .'|/_error/(\\d+)(?:\\.([^/]++))?(*:339)'
+                .'|/_error/(\\d+)(?:\\.([^/]++))?(*:495)'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
-        26 => [[['_route' => 'app_advice_show', '_controller' => 'App\\Controller\\AdviceController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        38 => [[['_route' => 'app_advice_edit', '_controller' => 'App\\Controller\\AdviceController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        45 => [[['_route' => 'app_advice_delete', '_controller' => 'App\\Controller\\AdviceController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        74 => [[['_route' => 'app_botanist_show', '_controller' => 'App\\Controller\\BotanistController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        86 => [[['_route' => 'app_botanist_edit', '_controller' => 'App\\Controller\\BotanistController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        93 => [[['_route' => 'app_botanist_delete', '_controller' => 'App\\Controller\\BotanistController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        121 => [[['_route' => 'app_message_show', '_controller' => 'App\\Controller\\MessageController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        134 => [[['_route' => 'app_message_edit', '_controller' => 'App\\Controller\\MessageController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        142 => [[['_route' => 'app_message_delete', '_controller' => 'App\\Controller\\MessageController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        172 => [[['_route' => 'app_plant_show', '_controller' => 'App\\Controller\\PlantController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        185 => [[['_route' => 'app_plant_edit', '_controller' => 'App\\Controller\\PlantController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        193 => [[['_route' => 'app_plant_delete', '_controller' => 'App\\Controller\\PlantController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        212 => [[['_route' => 'app_plant_sitting_index', '_controller' => 'App\\Controller\\PlantSittingController::index'], [], ['GET' => 0], null, true, false, null]],
-        232 => [[['_route' => 'app_plant_sitting_show', '_controller' => 'App\\Controller\\PlantSittingController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        245 => [[['_route' => 'app_plant_sitting_edit', '_controller' => 'App\\Controller\\PlantSittingController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        253 => [[['_route' => 'app_plant_sitting_delete', '_controller' => 'App\\Controller\\PlantSittingController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        281 => [[['_route' => 'app_user_show', '_controller' => 'App\\Controller\\UserController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        294 => [[['_route' => 'app_user_edit', '_controller' => 'App\\Controller\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        302 => [[['_route' => 'app_user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        339 => [
+        29 => [[['_route' => 'app_advice_show', '_controller' => 'App\\Controller\\AdviceController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        41 => [[['_route' => 'app_advice_edit', '_controller' => 'App\\Controller\\AdviceController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        48 => [[['_route' => 'app_advice_delete', '_controller' => 'App\\Controller\\AdviceController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        90 => [[['_route' => 'api_genid', '_controller' => 'api_platform.action.not_exposed', '_api_respond' => 'true'], ['id'], null, null, false, true, null]],
+        125 => [[['_route' => 'api_entrypoint', '_controller' => 'api_platform.action.entrypoint', '_format' => '', '_api_respond' => 'true', 'index' => 'index'], ['index', '_format'], null, null, false, true, null]],
+        156 => [[['_route' => 'api_doc', '_controller' => 'api_platform.action.documentation', '_format' => '', '_api_respond' => 'true'], ['_format'], null, null, false, true, null]],
+        195 => [[['_route' => 'api_jsonld_context', '_controller' => 'api_platform.jsonld.action.context', '_format' => 'jsonld', '_api_respond' => 'true'], ['shortName', '_format'], null, null, false, true, null]],
+        227 => [[['_route' => 'app_botanist_show', '_controller' => 'App\\Controller\\BotanistController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        240 => [[['_route' => 'app_botanist_edit', '_controller' => 'App\\Controller\\BotanistController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        248 => [[['_route' => 'app_botanist_delete', '_controller' => 'App\\Controller\\BotanistController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        277 => [[['_route' => 'app_message_show', '_controller' => 'App\\Controller\\MessageController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        290 => [[['_route' => 'app_message_edit', '_controller' => 'App\\Controller\\MessageController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        298 => [[['_route' => 'app_message_delete', '_controller' => 'App\\Controller\\MessageController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        328 => [[['_route' => 'app_plant_show', '_controller' => 'App\\Controller\\PlantController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        341 => [[['_route' => 'app_plant_edit', '_controller' => 'App\\Controller\\PlantController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        349 => [[['_route' => 'app_plant_delete', '_controller' => 'App\\Controller\\PlantController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        368 => [[['_route' => 'app_plant_sitting_index', '_controller' => 'App\\Controller\\PlantSittingController::index'], [], ['GET' => 0], null, true, false, null]],
+        388 => [[['_route' => 'app_plant_sitting_show', '_controller' => 'App\\Controller\\PlantSittingController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        401 => [[['_route' => 'app_plant_sitting_edit', '_controller' => 'App\\Controller\\PlantSittingController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        409 => [[['_route' => 'app_plant_sitting_delete', '_controller' => 'App\\Controller\\PlantSittingController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        437 => [[['_route' => 'app_user_show', '_controller' => 'App\\Controller\\UserController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        450 => [[['_route' => 'app_user_edit', '_controller' => 'App\\Controller\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        458 => [[['_route' => 'app_user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        495 => [
             [['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
