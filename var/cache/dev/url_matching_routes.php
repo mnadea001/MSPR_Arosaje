@@ -8,7 +8,7 @@
 return [
     false, // $matchHost
     [ // $staticRoutes
-        '/admin' => [[['_route' => 'admin', '_controller' => 'App\\Controller\\Admin\\AdminController::index'], null, null, null, false, false, null]],
+        '/admin' => [[['_route' => 'admin', '_controller' => 'App\\Controller\\Admin\\DashboardController::index'], null, null, null, false, false, null]],
         '/advice' => [[['_route' => 'app_advice_index', '_controller' => 'App\\Controller\\AdviceController::index'], null, ['GET' => 0], null, true, false, null]],
         '/advice/new' => [[['_route' => 'app_advice_new', '_controller' => 'App\\Controller\\AdviceController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/botanist' => [[['_route' => 'app_botanist_index', '_controller' => 'App\\Controller\\BotanistController::index'], null, ['GET' => 0], null, true, false, null]],
