@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VisitorRepository::class)]
 #[ApiResource]
-
 class Visitor extends User
 {
     #[ORM\Id]
