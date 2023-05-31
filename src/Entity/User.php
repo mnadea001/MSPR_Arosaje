@@ -2,26 +2,70 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\Get;
+use App\Controller\MeController;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Action\NotFoundAction;
+use ApiPlatform\Metadata\GetCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
+
+
+
+// #[ApiResource(
+//     collectionOperations: [
+//         'me' => [
+//             'pagination_enabled' => false,
+//             'path' => '/me',
+//             'method' => 'get',
+//             'controller' => MeController::class,
+//             'read' => false
+//         ]
+//     ],
+//     itemOperations: [
+//         'get' => [
+//             'controller' => NotFoundAction::class,
+//             'openapi_context' => ['summary' => 'hidden'],
+//             'read' => false,
+//             'output' => false
+//         ]
+//     ],
+//     normalizationContext: ['groups' => ['read:User']]
+// )]
+#[ApiResource(operations: [
+    new Get(
+        controller: NotFoundAction::class,
+        read: false,
+        output: false,
+    ),
+    new GetCollection(
+        controller: MeController::class,
+        read: false,
+        output: false,
+        uriTemplate: '/me',
+    )
+])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:User'])]
     private ?int $id = null;
 
+    #[Groups(['read:User'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['read:User'])]
     private array $roles = [];
     /**
      * @var string The hashed password
@@ -59,6 +103,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         $this->chats = new ArrayCollection();
         $this->messages = new ArrayCollection();
+    }
+
+    public function getSalt()
+    {
+        // Vous pouvez personnaliser la logique de génération du sel selon vos besoins
+
+        // Par exemple, vous pouvez utiliser la fonction `uniqid` pour générer un sel aléatoire
+        return uniqid('', true);
     }
 
     public function getId(): ?int
@@ -255,5 +307,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 }
