@@ -18,4 +18,7 @@ class SecurityController extends AbstractController
         ]);
      
     }
+
+    #[Route('/api/logout', name: 'api_logout', methods: ['POST'])]
+    public function logout(){}
 }

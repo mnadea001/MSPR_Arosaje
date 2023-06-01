@@ -16,28 +16,31 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 
-
-
-// #[ApiResource(
-//     collectionOperations: [
-//         'me' => [
-//             'pagination_enabled' => false,
-//             'path' => '/me',
-//             'method' => 'get',
-//             'controller' => MeController::class,
-//             'read' => false
-//         ]
-//     ],
-//     itemOperations: [
-//         'get' => [
-//             'controller' => NotFoundAction::class,
-//             'openapi_context' => ['summary' => 'hidden'],
-//             'read' => false,
-//             'output' => false
-//         ]
-//     ],
-//     normalizationContext: ['groups' => ['read:User']]
-// )]
+#[ApiResource(
+    security: 'is_granted("ROLE_USER")',
+    collectionOperations: [
+        'me' => [
+            'pagination_enabled' => false,
+            'path' => '/me',
+            'method' => 'get',
+            'controller' => MeController::class,
+            'read' => false,
+            'openapi_context' => [
+                'security' => ['cookieAuth' => []]
+            ]
+          
+        ]
+    ],
+    itemOperations: [
+        'get' => [
+            'controller' => NotFoundAction::class,
+            'openapi_context' => ['summary' => 'hidden'],
+            'read' => false,
+            'output' => false
+        ]
+    ],
+    normalizationContext: ['groups' => ['read:User']]
+)]
 #[ApiResource(operations: [
     new Get(
         controller: NotFoundAction::class,
