@@ -36,6 +36,10 @@ class Plant
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
+    #[ORM\ManyToOne(inversedBy: 'plants')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?PlantType $PlantType = null;
+
     public function __construct()
     {
         $this->Advice = new ArrayCollection();
@@ -47,17 +51,6 @@ class Plant
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
 
     public function getImageFile(): ?string
     {
@@ -160,6 +153,18 @@ class Plant
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getPlantType(): ?PlantType
+    {
+        return $this->PlantType;
+    }
+
+    public function setPlantType(?PlantType $PlantType): self
+    {
+        $this->PlantType = $PlantType;
 
         return $this;
     }

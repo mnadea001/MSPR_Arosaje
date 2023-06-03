@@ -7,15 +7,11 @@ use App\Repository\BotanisteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Entity;
 
-#[ORM\Entity(repositoryClass: BotanisteRepository::class)]
-#[ApiResource]
+#[Entity]
 class Botaniste extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'Botaniste', targetEntity: Advice::class, orphanRemoval: true)]
     private Collection $advice;
@@ -30,10 +26,6 @@ class Botaniste extends User
         $this->plantSittings = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     /**
      * @return Collection<int, Advice>

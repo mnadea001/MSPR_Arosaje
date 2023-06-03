@@ -12,10 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 class Visitor extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'Visitor', targetEntity: Plant::class)]
     private Collection $plants;
@@ -30,10 +26,6 @@ class Visitor extends User
         $this->plantSittings = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     /**
      * @return Collection<int, Plant>
