@@ -35,7 +35,7 @@ class PlantSitting
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'plantSittings')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Botaniste $Botaniste = null;
 
 

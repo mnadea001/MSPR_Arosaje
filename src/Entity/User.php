@@ -58,6 +58,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $Latitude = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $Longitude = null;
+
 
 
     public function __construct()
@@ -258,6 +264,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getLatitude(): ?float
+    {
+        return $this->Latitude;
+    }
+
+    public function setLatitude(?float $Latitude): self
+    {
+        $this->Latitude = $Latitude;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?float
+    {
+        return $this->Longitude;
+    }
+
+    public function setLongitude(?float $Longitude): self
+    {
+        $this->Longitude = $Longitude;
 
         return $this;
     }
