@@ -2,12 +2,22 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\AdviceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdviceRepository::class)]
+#[ApiResource(security: "is_granted('ROLE_USER')")]
+#[GetCollection]
+#[Get]
+#[Post]
+#[Put(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
+#[Delete(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
 class Advice
 {
     #[ORM\Id]
@@ -18,24 +28,19 @@ class Advice
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: Plant::class, inversedBy: 'advice')]
-    private Collection $plant;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-   private $createdAt;
+    #[ORM\ManyToOne(inversedBy: 'Advice')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Plant $plant = null;
 
     #[ORM\ManyToOne(inversedBy: 'advice')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Botanist $botanist = null;
-
-    public function __construct()
-    {
-        $this->defaultCreatedAt();
-        $this->plant = new ArrayCollection();
-    }
+    private ?Botaniste $Botaniste = null;
 
     public function getId(): ?int
     {
@@ -59,33 +64,9 @@ class Advice
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription(string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Plant>
-     */
-    public function getPlant(): Collection
-    {
-        return $this->plant;
-    }
-
-    public function addPlant(Plant $plant): self
-    {
-        if (!$this->plant->contains($plant)) {
-            $this->plant->add($plant);
-        }
-
-        return $this;
-    }
-
-    public function removePlant(Plant $plant): self
-    {
-        $this->plant->removeElement($plant);
 
         return $this;
     }
@@ -102,22 +83,26 @@ class Advice
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function defaultCreatedAt()
+    public function getPlant(): ?Plant
     {
-        $this->createdAt = new \DateTimeImmutable();
+        return $this->plant;
     }
 
-    public function getBotanist(): ?Botanist
+    public function setPlant(?Plant $plant): self
     {
-        return $this->botanist;
+        $this->plant = $plant;
+
+        return $this;
     }
 
-    public function setBotanist(?Botanist $botanist): self
+    public function getBotaniste(): ?Botaniste
     {
-        $this->botanist = $botanist;
+        return $this->Botaniste;
+    }
+
+    public function setBotaniste(?Botaniste $Botaniste): self
+    {
+        $this->Botaniste = $Botaniste;
 
         return $this;
     }

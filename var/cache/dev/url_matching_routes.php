@@ -8,85 +8,114 @@
 return [
     false, // $matchHost
     [ // $staticRoutes
-        '/admin' => [[['_route' => 'admin', '_controller' => 'App\\Controller\\Admin\\AdminController::index'], null, null, null, false, false, null]],
-        '/advice' => [[['_route' => 'app_advice_index', '_controller' => 'App\\Controller\\AdviceController::index'], null, ['GET' => 0], null, true, false, null]],
-        '/advice/new' => [[['_route' => 'app_advice_new', '_controller' => 'App\\Controller\\AdviceController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        '/botanist' => [[['_route' => 'app_botanist_index', '_controller' => 'App\\Controller\\BotanistController::index'], null, ['GET' => 0], null, true, false, null]],
-        '/botanist/new' => [[['_route' => 'app_botanist_new', '_controller' => 'App\\Controller\\BotanistController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        '/home' => [[['_route' => 'app_home', '_controller' => 'App\\Controller\\HomeController::index'], null, null, null, false, false, null]],
-        '/message' => [[['_route' => 'app_message_index', '_controller' => 'App\\Controller\\MessageController::index'], null, ['GET' => 0], null, true, false, null]],
-        '/message/new' => [[['_route' => 'app_message_new', '_controller' => 'App\\Controller\\MessageController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        '/plant' => [[['_route' => 'app_plant_index', '_controller' => 'App\\Controller\\PlantController::index'], null, ['GET' => 0], null, true, false, null]],
-        '/plant/new' => [[['_route' => 'app_plant_new', '_controller' => 'App\\Controller\\PlantController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        '/plant/sitting/new' => [[['_route' => 'app_plant_sitting_new', '_controller' => 'App\\Controller\\PlantSittingController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        '/user_register' => [[['_route' => 'app_user_register', '_controller' => 'App\\Controller\\RegistrationController::register'], null, null, null, false, false, null]],
-        '/botanist_register' => [[['_route' => 'app_botanist_register', '_controller' => 'App\\Controller\\RegistrationController::BotanistRegister'], null, null, null, false, false, null]],
-        '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'], null, null, null, false, false, null]],
-        '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, null, null, false, false, null]],
-        '/user' => [[['_route' => 'app_user_index', '_controller' => 'App\\Controller\\UserController::index'], null, ['GET' => 0], null, true, false, null]],
-        '/user/new' => [[['_route' => 'app_user_new', '_controller' => 'App\\Controller\\UserController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/admin' => [[['_route' => 'admin', '_controller' => 'App\\Controller\\Admin\\DashboardController::index'], null, null, null, false, false, null]],
+        '/createPS' => [[['_route' => 'app_plant_type', '_controller' => 'App\\Controller\\PlantTypeController::createPlantSitting'], null, null, null, false, false, null]],
+        '/api/login_check' => [[['_route' => 'api_login_check', '_controller' => 'App\\Controller\\SecurityController::login'], null, ['POST' => 0], null, false, false, null]],
+        '/api/logout' => [[['_route' => 'api_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, ['POST' => 0], null, false, false, null]],
+        '/auth' => [[['_route' => 'auth'], null, ['POST' => 0], null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
-                .'|/advice/([^/]++)(?'
-                    .'|(*:26)'
-                    .'|/edit(*:38)'
-                    .'|(*:45)'
-                .')'
-                .'|/botanist/([^/]++)(?'
-                    .'|(*:74)'
-                    .'|/edit(*:86)'
-                    .'|(*:93)'
-                .')'
-                .'|/message/([^/]++)(?'
-                    .'|(*:121)'
-                    .'|/edit(*:134)'
-                    .'|(*:142)'
-                .')'
-                .'|/plant/(?'
-                    .'|([^/]++)(?'
-                        .'|(*:172)'
-                        .'|/edit(*:185)'
-                        .'|(*:193)'
-                    .')'
-                    .'|sitting(?'
-                        .'|(*:212)'
-                        .'|/([^/]++)(?'
-                            .'|(*:232)'
-                            .'|/edit(*:245)'
-                            .'|(*:253)'
+                .'|/api(?'
+                    .'|/\\.well\\-known/genid/([^/]++)(*:43)'
+                    .'|(?:/(index)(?:\\.([^/]++))?)?(*:78)'
+                    .'|/(?'
+                        .'|docs(?:\\.([^/]++))?(*:108)'
+                        .'|contexts/([^.]+)(?:\\.(jsonld))?(*:147)'
+                        .'|advice(?'
+                            .'|(?:\\.([^/]++))?(*:179)'
+                            .'|/([^/\\.]++)(?:\\.([^/]++))?(*:213)'
+                            .'|(?:\\.([^/]++))?(*:236)'
+                            .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
+                                .'|(*:273)'
+                            .')'
+                        .')'
+                        .'|plant(?'
+                            .'|s(?'
+                                .'|(?:\\.([^/]++))?(*:310)'
+                                .'|/([^/\\.]++)(?:\\.([^/]++))?(*:344)'
+                                .'|(?:\\.([^/]++))?(*:367)'
+                                .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
+                                    .'|(*:404)'
+                                .')'
+                            .')'
+                            .'|_(?'
+                                .'|sittings(?'
+                                    .'|(?:\\.([^/]++))?(*:444)'
+                                    .'|/([^/\\.]++)(?:\\.([^/]++))?(*:478)'
+                                    .'|(?:\\.([^/]++))?(*:501)'
+                                    .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
+                                        .'|(*:538)'
+                                    .')'
+                                .')'
+                                .'|types(?'
+                                    .'|(?:\\.([^/]++))?(*:571)'
+                                    .'|/([^/\\.]++)(?:\\.([^/]++))?(*:605)'
+                                    .'|(?:\\.([^/]++))?(*:628)'
+                                    .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
+                                        .'|(*:665)'
+                                    .')'
+                                .')'
+                            .')'
+                        .')'
+                        .'|users(?'
+                            .'|/([^/\\.]++)(?:\\.([^/]++))?(*:711)'
+                            .'|(?:\\.([^/]++))?(?'
+                                .'|(*:737)'
+                            .')'
+                            .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
+                                .'|(*:775)'
+                            .')'
                         .')'
                     .')'
                 .')'
-                .'|/user/([^/]++)(?'
-                    .'|(*:281)'
-                    .'|/edit(*:294)'
-                    .'|(*:302)'
-                .')'
-                .'|/_error/(\\d+)(?:\\.([^/]++))?(*:339)'
+                .'|/_error/(\\d+)(?:\\.([^/]++))?(*:815)'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
-        26 => [[['_route' => 'app_advice_show', '_controller' => 'App\\Controller\\AdviceController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        38 => [[['_route' => 'app_advice_edit', '_controller' => 'App\\Controller\\AdviceController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        45 => [[['_route' => 'app_advice_delete', '_controller' => 'App\\Controller\\AdviceController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        74 => [[['_route' => 'app_botanist_show', '_controller' => 'App\\Controller\\BotanistController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        86 => [[['_route' => 'app_botanist_edit', '_controller' => 'App\\Controller\\BotanistController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        93 => [[['_route' => 'app_botanist_delete', '_controller' => 'App\\Controller\\BotanistController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        121 => [[['_route' => 'app_message_show', '_controller' => 'App\\Controller\\MessageController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        134 => [[['_route' => 'app_message_edit', '_controller' => 'App\\Controller\\MessageController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        142 => [[['_route' => 'app_message_delete', '_controller' => 'App\\Controller\\MessageController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        172 => [[['_route' => 'app_plant_show', '_controller' => 'App\\Controller\\PlantController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        185 => [[['_route' => 'app_plant_edit', '_controller' => 'App\\Controller\\PlantController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        193 => [[['_route' => 'app_plant_delete', '_controller' => 'App\\Controller\\PlantController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        212 => [[['_route' => 'app_plant_sitting_index', '_controller' => 'App\\Controller\\PlantSittingController::index'], [], ['GET' => 0], null, true, false, null]],
-        232 => [[['_route' => 'app_plant_sitting_show', '_controller' => 'App\\Controller\\PlantSittingController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        245 => [[['_route' => 'app_plant_sitting_edit', '_controller' => 'App\\Controller\\PlantSittingController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        253 => [[['_route' => 'app_plant_sitting_delete', '_controller' => 'App\\Controller\\PlantSittingController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        281 => [[['_route' => 'app_user_show', '_controller' => 'App\\Controller\\UserController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        294 => [[['_route' => 'app_user_edit', '_controller' => 'App\\Controller\\UserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        302 => [[['_route' => 'app_user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        339 => [
+        43 => [[['_route' => 'api_genid', '_controller' => 'api_platform.action.not_exposed', '_api_respond' => 'true'], ['id'], null, null, false, true, null]],
+        78 => [[['_route' => 'api_entrypoint', '_controller' => 'api_platform.action.entrypoint', '_format' => '', '_api_respond' => 'true', 'index' => 'index'], ['index', '_format'], null, null, false, true, null]],
+        108 => [[['_route' => 'api_doc', '_controller' => 'api_platform.action.documentation', '_format' => '', '_api_respond' => 'true'], ['_format'], null, null, false, true, null]],
+        147 => [[['_route' => 'api_jsonld_context', '_controller' => 'api_platform.jsonld.action.context', '_format' => 'jsonld', '_api_respond' => 'true'], ['shortName', '_format'], null, null, false, true, null]],
+        179 => [[['_route' => '_api_/advice{._format}_get_collection', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\Advice', '_api_operation_name' => '_api_/advice{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null]],
+        213 => [[['_route' => '_api_/advice/{id}{._format}_get', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\Advice', '_api_operation_name' => '_api_/advice/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
+        236 => [[['_route' => '_api_/advice{._format}_post', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\Advice', '_api_operation_name' => '_api_/advice{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null]],
+        273 => [
+            [['_route' => '_api_/advice/{id}{._format}_put', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\Advice', '_api_operation_name' => '_api_/advice/{id}{._format}_put'], ['id', '_format'], ['PUT' => 0], null, false, true, null],
+            [['_route' => '_api_/advice/{id}{._format}_delete', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\Advice', '_api_operation_name' => '_api_/advice/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
+        ],
+        310 => [[['_route' => '_api_/plants{._format}_get_collection', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\Plant', '_api_operation_name' => '_api_/plants{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null]],
+        344 => [[['_route' => '_api_/plants/{id}{._format}_get', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\Plant', '_api_operation_name' => '_api_/plants/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
+        367 => [[['_route' => '_api_/plants{._format}_post', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\Plant', '_api_operation_name' => '_api_/plants{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null]],
+        404 => [
+            [['_route' => '_api_/plants/{id}{._format}_put', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\Plant', '_api_operation_name' => '_api_/plants/{id}{._format}_put'], ['id', '_format'], ['PUT' => 0], null, false, true, null],
+            [['_route' => '_api_/plants/{id}{._format}_delete', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\Plant', '_api_operation_name' => '_api_/plants/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
+        ],
+        444 => [[['_route' => '_api_/plant_sittings{._format}_get_collection', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\PlantSitting', '_api_operation_name' => '_api_/plant_sittings{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null]],
+        478 => [[['_route' => '_api_/plant_sittings/{id}{._format}_get', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\PlantSitting', '_api_operation_name' => '_api_/plant_sittings/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
+        501 => [[['_route' => '_api_/plant_sittings{._format}_post', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\PlantSitting', '_api_operation_name' => '_api_/plant_sittings{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null]],
+        538 => [
+            [['_route' => '_api_/plant_sittings/{id}{._format}_put', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\PlantSitting', '_api_operation_name' => '_api_/plant_sittings/{id}{._format}_put'], ['id', '_format'], ['PUT' => 0], null, false, true, null],
+            [['_route' => '_api_/plant_sittings/{id}{._format}_delete', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\PlantSitting', '_api_operation_name' => '_api_/plant_sittings/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
+        ],
+        571 => [[['_route' => '_api_/plant_types{._format}_get_collection', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\PlantType', '_api_operation_name' => '_api_/plant_types{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null]],
+        605 => [[['_route' => '_api_/plant_types/{id}{._format}_get', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\PlantType', '_api_operation_name' => '_api_/plant_types/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
+        628 => [[['_route' => '_api_/plant_types{._format}_post', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\PlantType', '_api_operation_name' => '_api_/plant_types{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null]],
+        665 => [
+            [['_route' => '_api_/plant_types/{id}{._format}_put', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\PlantType', '_api_operation_name' => '_api_/plant_types/{id}{._format}_put'], ['id', '_format'], ['PUT' => 0], null, false, true, null],
+            [['_route' => '_api_/plant_types/{id}{._format}_delete', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\PlantType', '_api_operation_name' => '_api_/plant_types/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
+        ],
+        711 => [[['_route' => '_api_/users/{id}{._format}_get', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\User', '_api_operation_name' => '_api_/users/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
+        737 => [
+            [['_route' => '_api_/users{._format}_get_collection', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\User', '_api_operation_name' => '_api_/users{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
+            [['_route' => '_api_/users{._format}_post', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\User', '_api_operation_name' => '_api_/users{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
+        ],
+        775 => [
+            [['_route' => '_api_/users/{id}{._format}_put', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\User', '_api_operation_name' => '_api_/users/{id}{._format}_put'], ['id', '_format'], ['PUT' => 0], null, false, true, null],
+            [['_route' => '_api_/users/{id}{._format}_patch', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\User', '_api_operation_name' => '_api_/users/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
+            [['_route' => '_api_/users/{id}{._format}_delete', '_controller' => 'api_platform.action.placeholder', '_format' => null, '_stateless' => null, '_api_resource_class' => 'App\\Entity\\User', '_api_operation_name' => '_api_/users/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
+        ],
+        815 => [
             [['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

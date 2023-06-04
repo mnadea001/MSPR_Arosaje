@@ -2,12 +2,24 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\PlantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlantRepository::class)]
+#[ApiResource(security: "is_granted('ROLE_USER')")]
+#[GetCollection]
+#[Get]
+#[Post]
+#[Put(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
+#[Delete(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
 class Plant
 {
     #[ORM\Id]
@@ -15,31 +27,31 @@ class Plant
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageFile = null;
+
+    #[ORM\ManyToOne(inversedBy: 'plants')]
+    private ?Visitor $Visitor = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $addAt = null;
+
+    #[ORM\OneToMany(mappedBy: 'plant', targetEntity: Advice::class, orphanRemoval: true)]
+    private Collection $Advice;
+
+    #[ORM\ManyToMany(targetEntity: PlantSitting::class, mappedBy: 'plant')]
+    private Collection $plantSittings;
 
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'plants')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\ManyToMany(targetEntity: Advice::class, mappedBy: 'plant')]
-    private Collection $advice;
-
-    #[ORM\ManyToMany(targetEntity: PlantSitting::class, mappedBy: 'plant')]
-    private Collection $plantSittings;
+    private ?PlantType $PlantType = null;
 
     public function __construct()
     {
-        $this->advice = new ArrayCollection();
+        $this->Advice = new ArrayCollection();
         $this->plantSittings = new ArrayCollection();
     }
 
@@ -48,17 +60,6 @@ class Plant
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
 
     public function getImageFile(): ?string
     {
@@ -72,38 +73,26 @@ class Plant
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getVisitor(): ?Visitor
     {
-        return $this->description;
+        return $this->Visitor;
     }
 
-    public function setDescription(string $description): self
+    public function setVisitor(?Visitor $Visitor): self
     {
-        $this->description = $description;
+        $this->Visitor = $Visitor;
 
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getAddAt(): ?\DateTimeImmutable
     {
-        return $this->user;
+        return $this->addAt;
     }
 
-    public function setUser(?User $user): self
+    public function setAddAt(\DateTimeImmutable $addAt): self
     {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
+        $this->addAt = $addAt;
 
         return $this;
     }
@@ -113,14 +102,14 @@ class Plant
      */
     public function getAdvice(): Collection
     {
-        return $this->advice;
+        return $this->Advice;
     }
 
     public function addAdvice(Advice $advice): self
     {
-        if (!$this->advice->contains($advice)) {
-            $this->advice->add($advice);
-            $advice->addPlant($this);
+        if (!$this->Advice->contains($advice)) {
+            $this->Advice->add($advice);
+            $advice->setPlant($this);
         }
 
         return $this;
@@ -128,8 +117,11 @@ class Plant
 
     public function removeAdvice(Advice $advice): self
     {
-        if ($this->advice->removeElement($advice)) {
-            $advice->removePlant($this);
+        if ($this->Advice->removeElement($advice)) {
+            // set the owning side to null (unless already changed)
+            if ($advice->getPlant() === $this) {
+                $advice->setPlant(null);
+            }
         }
 
         return $this;
@@ -158,6 +150,30 @@ class Plant
         if ($this->plantSittings->removeElement($plantSitting)) {
             $plantSitting->removePlant($this);
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getPlantType(): ?PlantType
+    {
+        return $this->PlantType;
+    }
+
+    public function setPlantType(?PlantType $PlantType): self
+    {
+        $this->PlantType = $PlantType;
 
         return $this;
     }
