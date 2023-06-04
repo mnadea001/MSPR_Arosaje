@@ -24,13 +24,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 
-#[ApiResource]
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[InheritanceType('JOINED')]
 #[DiscriminatorColumn(name: 'discr', type: 'string')]
 #[DiscriminatorMap(['visiteur' => Visitor::class, 'botaniste' => Botaniste::class])]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class  User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -73,12 +72,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?float $longitude = null;
 
 
-
     public function __construct()
     {
 
         $this->chats = new ArrayCollection();
         $this->messages = new ArrayCollection();
+
     }
 
     public function getId(): ?int
