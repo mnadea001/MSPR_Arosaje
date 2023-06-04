@@ -2,29 +2,48 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Controller\MeController;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Repository\UserRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Action\NotFoundAction;
+use ApiPlatform\Metadata\GetCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
+use Doctrine\ORM\Mapping\InheritanceType;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+
+
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[InheritanceType('JOINED')]
+#[DiscriminatorColumn(name: 'discr', type: 'string')]
+#[DiscriminatorMap(['visiteur' => Visitor::class, 'botaniste' => Botaniste::class])]
+class  User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:User'])]
     private ?int $id = null;
 
+    #[Groups(['read:User'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['read:User'])]
     private array $roles = [];
-
     /**
      * @var string The hashed password
      */
@@ -34,34 +53,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $address = null;
+    #[ORM\Column(length: 255)]
+    private ?string $adress = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $city = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $country = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-   private $createdAt;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Plant::class, orphanRemoval: true)]
-    private Collection $plants;
+    #[ORM\Column(nullable: true)]
+    private ?float $latitude = null;
 
-    #[ORM\OneToMany(mappedBy: 'sender', targetEntity: Message::class, orphanRemoval: true)]
-    private Collection $messages;
+    #[ORM\Column(nullable: true)]
+    private ?float $longitude = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: PlantSitting::class, orphanRemoval: true)]
-    private Collection $plantSittings;
 
     public function __construct()
     {
-        
-        $this->defaultCreatedAt();
-        $this->plants = new ArrayCollection();
+
+        $this->chats = new ArrayCollection();
         $this->messages = new ArrayCollection();
-        $this->plantSittings = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -87,14 +103,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @see UserInterface
      */
     public function getUserIdentifier(): string
-    {
-        return (string) $this->email;
-    }
-
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    public function getUsername(): string
     {
         return (string) $this->email;
     }
@@ -134,23 +142,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Returning a salt is only needed, if you are not using a modern
-     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
-     *
-     * @see UserInterface
-     */
-    public function getSalt(): ?string
-    {
-        return null;
-    }
-
-    /**
      * @see UserInterface
      */
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
     }
 
     public function setUsername(string $username): self
@@ -160,14 +164,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAddress(): ?string
+    public function getAdress(): ?string
     {
-        return $this->address;
+        return $this->adress;
     }
 
-    public function setAddress(?string $address): self
+    public function setAdress(string $adress): self
     {
-        $this->address = $address;
+        $this->adress = $adress;
 
         return $this;
     }
@@ -177,7 +181,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->city;
     }
 
-    public function setCity(?string $city): self
+    public function setCity(string $city): self
     {
         $this->city = $city;
 
@@ -189,7 +193,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->country;
     }
 
-    public function setCountry(?string $country): self
+    public function setCountry(string $country): self
     {
         $this->country = $country;
 
@@ -208,101 +212,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function defaultCreatedAt()
+    public function getLatitude(): ?float
     {
-        $this->createdAt = new \DateTimeImmutable();
+        return $this->latitude;
     }
 
-    /**
-     * @return Collection<int, Plant>
-     */
-    public function getPlants(): Collection
+    public function setLatitude(?float $latitude): self
     {
-        return $this->plants;
-    }
-
-    public function addPlant(Plant $plant): self
-    {
-        if (!$this->plants->contains($plant)) {
-            $this->plants->add($plant);
-            $plant->setUser($this);
-        }
+        $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function removePlant(Plant $plant): self
+    public function getLongitude(): ?float
     {
-        if ($this->plants->removeElement($plant)) {
-            // set the owning side to null (unless already changed)
-            if ($plant->getUser() === $this) {
-                $plant->setUser(null);
-            }
-        }
+        return $this->longitude;
+    }
+
+    public function setLongitude(?float $longitude): self
+    {
+        $this->longitude = $longitude;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Message>
-     */
-    public function getMessages(): Collection
-    {
-        return $this->messages;
-    }
-
-    public function addMessage(Message $message): self
-    {
-        if (!$this->messages->contains($message)) {
-            $this->messages->add($message);
-            $message->setSender($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessage(Message $message): self
-    {
-        if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
-            if ($message->getSender() === $this) {
-                $message->setSender(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, PlantSitting>
-     */
-    public function getPlantSittings(): Collection
-    {
-        return $this->plantSittings;
-    }
-
-    public function addPlantSitting(PlantSitting $plantSitting): self
-    {
-        if (!$this->plantSittings->contains($plantSitting)) {
-            $this->plantSittings->add($plantSitting);
-            $plantSitting->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlantSitting(PlantSitting $plantSitting): self
-    {
-        if ($this->plantSittings->removeElement($plantSitting)) {
-            // set the owning side to null (unless already changed)
-            if ($plantSitting->getUser() === $this) {
-                $plantSitting->setUser(null);
-            }
-        }
-
-        return $this;
-    }
 }

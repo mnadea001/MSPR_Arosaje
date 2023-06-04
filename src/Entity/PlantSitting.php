@@ -2,6 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\PlantSittingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,6 +15,13 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlantSittingRepository::class)]
+#[ApiResource(security: "is_granted('ROLE_USER')")]
+#[GetCollection]
+#[Get]
+#[Post]
+#[Put(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
+#[Delete(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
+
 class PlantSitting
 {
     #[ORM\Id]
@@ -17,28 +30,28 @@ class PlantSitting
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'plantSittings')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
+    private ?Visitor $Visitor = null;
 
     #[ORM\ManyToMany(targetEntity: Plant::class, inversedBy: 'plantSittings')]
     private Collection $plant;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $start_date = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $end_date = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-   private $createdAt;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'plantSittings')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Botanist $botanist = null;
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Botaniste $Botaniste = null;
+
+
 
     public function __construct()
     {
-        $this->defaultCreatedAt();
         $this->plant = new ArrayCollection();
     }
 
@@ -47,14 +60,14 @@ class PlantSitting
         return $this->id;
     }
 
-    public function getUser(): ?User
+    public function getVisitor(): ?Visitor
     {
-        return $this->user;
+        return $this->Visitor;
     }
 
-    public function setUser(?User $user): self
+    public function setVisitor(?Visitor $Visitor): self
     {
-        $this->user = $user;
+        $this->Visitor = $Visitor;
 
         return $this;
     }
@@ -119,23 +132,17 @@ class PlantSitting
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function defaultCreatedAt()
+    public function getBotaniste(): ?Botaniste
     {
-        $this->createdAt = new \DateTimeImmutable();
+        return $this->Botaniste;
     }
 
-    public function getBotanist(): ?Botanist
+    public function setBotaniste(?Botaniste $Botaniste): self
     {
-        return $this->botanist;
-    }
-
-    public function setBotanist(?Botanist $botanist): self
-    {
-        $this->botanist = $botanist;
+        $this->Botaniste = $Botaniste;
 
         return $this;
     }
+
+
 }
