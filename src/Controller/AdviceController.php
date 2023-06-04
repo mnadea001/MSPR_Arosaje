@@ -16,10 +16,9 @@ class AdviceController extends AbstractController
     #[Route('/', name: 'app_advice_index', methods: ['GET'])]
     public function index(AdviceRepository $adviceRepository): Response
     {
-        dd("prout");
-        // return $this->render('advice/index.html.twig', [
-        //     'advice' => $adviceRepository->findAll(),
-        // ]);
+        return $this->render('advice/index.html.twig', [
+            'advice' => $adviceRepository->findAll(),
+        ]);
     }
 
     #[Route('/new', name: 'app_advice_new', methods: ['GET', 'POST'])]
