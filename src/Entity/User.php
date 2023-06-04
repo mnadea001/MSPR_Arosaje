@@ -2,17 +2,27 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\Get;
+use App\Controller\MeController;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Action\NotFoundAction;
+use ApiPlatform\Metadata\GetCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+
+#[ApiResource(
+    security: 'is_granted("ROLE_USER")',
+    normalizationContext: ['groups' => ['read:User']]
+)]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(normalizationContext: ['groups' => ['read']], denormalizationContext: ['groups' => ['write']],)]
 #[InheritanceType('JOINED')]
@@ -23,19 +33,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:User'])]
     private ?int $id = null;
 
+    #[Groups(['read:User'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['read:User'])]
     private array $roles = [];
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
-
 
     #[ORM\OneToMany(mappedBy: 'User', targetEntity: Chat::class, orphanRemoval: true)]
     private Collection $chats;

@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlantRepository::class)]
 #[ApiResource]
-
 class Plant
 {
     #[ORM\Id]
