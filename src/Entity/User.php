@@ -2,7 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Controller\MeController;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
@@ -13,18 +17,16 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 
-#[ApiResource(
-    security: 'is_granted("ROLE_USER")',
-    normalizationContext: ['groups' => ['read:User']]
-)]
+#[ApiResource]
+
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource(normalizationContext: ['groups' => ['read']], denormalizationContext: ['groups' => ['write']],)]
 #[InheritanceType('JOINED')]
 #[DiscriminatorColumn(name: 'discr', type: 'string')]
 #[DiscriminatorMap(['visiteur' => Visitor::class, 'botaniste' => Botaniste::class])]
@@ -49,8 +51,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-
-
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
@@ -67,10 +67,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $Latitude = null;
+    private ?float $latitude = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $Longitude = null;
+    private ?float $longitude = null;
 
 
 
@@ -215,24 +215,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getLatitude(): ?float
     {
-        return $this->Latitude;
+        return $this->latitude;
     }
 
-    public function setLatitude(?float $Latitude): self
+    public function setLatitude(?float $latitude): self
     {
-        $this->Latitude = $Latitude;
+        $this->latitude = $latitude;
 
         return $this;
     }
 
     public function getLongitude(): ?float
     {
-        return $this->Longitude;
+        return $this->longitude;
     }
 
-    public function setLongitude(?float $Longitude): self
+    public function setLongitude(?float $longitude): self
     {
-        $this->Longitude = $Longitude;
+        $this->longitude = $longitude;
 
         return $this;
     }

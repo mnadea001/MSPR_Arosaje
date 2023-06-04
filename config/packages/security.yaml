@@ -30,7 +30,8 @@ security:
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-
+            logout:
+                path: api_logout
     access_control:
         - { path: ^/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/api, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI docs
