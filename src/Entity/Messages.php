@@ -77,7 +77,7 @@ class Messages
         return $this;
     }
 
-    public function isIsRead(): ?bool
+    public function isRead(): ?bool
     {
         return $this->isRead;
     }
