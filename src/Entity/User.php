@@ -2,22 +2,13 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
-use App\Controller\MeController;
+
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Action\NotFoundAction;
-use ApiPlatform\Metadata\GetCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -71,12 +62,16 @@ class  User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?float $longitude = null;
 
+    #[ORM\OneToMany(mappedBy: 'sender', targetEntity: Messages::class, orphanRemoval: true)]
+    private Collection $sent;
+
 
     public function __construct()
     {
 
         $this->chats = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->sent = new ArrayCollection();
 
     }
 
@@ -232,6 +227,36 @@ class  User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLongitude(?float $longitude): self
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Messages>
+     */
+    public function getSent(): Collection
+    {
+        return $this->sent;
+    }
+
+    public function addSent(Messages $sent): self
+    {
+        if (!$this->sent->contains($sent)) {
+            $this->sent->add($sent);
+            $sent->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSent(Messages $sent): self
+    {
+        if ($this->sent->removeElement($sent)) {
+            // set the owning side to null (unless already changed)
+            if ($sent->getSender() === $this) {
+                $sent->setSender(null);
+            }
+        }
 
         return $this;
     }
