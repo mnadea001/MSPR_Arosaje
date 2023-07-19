@@ -70,7 +70,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ]
             )
         );
-        $openApi->getPaths()->addPath('api/login', $pathItem);
+
         return $openApi;
     }
 }

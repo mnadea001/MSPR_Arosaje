@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Entity;
 
 #[Entity]
+#[ApiResource]
 class Botaniste extends User
 {
 
