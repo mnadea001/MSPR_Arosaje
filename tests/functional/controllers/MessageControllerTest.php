@@ -3,60 +3,64 @@
 namespace App\tests\functional\controllers;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpClient\HttpClient;
 
-class MessageControllerTest extends WebTestCase
+class MessagesControllerTest extends WebTestCase
 {
     public function testIndex(): void
     {
-        $client = static::createKernel()->getContainer()->get('test.client');
-        $client->request('GET', '/message/');
+        $client = HttpClient::create();
+        $response = $client->request('GET', 'http://localhost/message/');
 
-        $this->assertResponseIsSuccessful();
-        $this->assertJson($client->getResponse()->getContent());
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertJson($response->getContent());
     }
 
     public function testSend(): void
     {
-        $client = static::createKernel()->getContainer()->get('test.client');
-        $client->request('POST', '/message/send', [], [], [], json_encode(['content' => 'Test message']));
+        $client = HttpClient::create();
+        $response = $client->request('POST', 'http://localhost/message/send', [
+            'body' => json_encode(['content' => 'Test message']),
+            'headers' => ['Content-Type' => 'application/json'],
+        ]);
 
-        $this->assertResponseIsSuccessful();
-        $this->assertJson($client->getResponse()->getContent());
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertJson($response->getContent());
     }
 
     public function testReceived(): void
     {
-        $client = static::createKernel()->getContainer()->get('test.client');
-        $client->request('GET', '/message/received');
+        $client = HttpClient::create();
+        $response = $client->request('GET', 'http://localhost/message/received');
 
-        $this->assertResponseIsSuccessful();
-        $this->assertJson($client->getResponse()->getContent());
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertJson($response->getContent());
     }
 
     public function testRead(): void
     {
-        $client = static::createKernel()->getContainer()->get('test.client');
-        $client->request('GET', '/message/read/1');
+        $client = HttpClient::create();
+        $response = $client->request('GET', 'http://localhost/message/read/1');
 
-        $this->assertResponseIsSuccessful();
-        $this->assertJson($client->getResponse()->getContent());
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertJson($response->getContent());
     }
 
     public function testDelete(): void
     {
-        $client = static::createKernel()->getContainer()->get('test.client');
-        $client->request('DELETE', '/message/delete/1');
+        $client = HttpClient::create();
+        $response = $client->request('DELETE', 'http://localhost/message/delete/1');
 
-        $this->assertResponseIsSuccessful();
-        $this->assertJson($client->getResponse()->getContent());
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertJson($response->getContent());
     }
 
     public function testSent(): void
     {
-        $client = static::createKernel()->getContainer()->get('test.client');
-        $client->request('GET', '/message/sent');
+        $client = HttpClient::create();
+        $response = $client->request('GET', 'http://localhost/message/sent');
 
-        $this->assertResponseIsSuccessful();
-        $this->assertJson($client->getResponse()->getContent());
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertJson($response->getContent());
     }
 }
