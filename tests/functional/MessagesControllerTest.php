@@ -39,7 +39,7 @@ class MessagesControllerTest extends WebTestCase
 
     public function testRead(): void
     {
-        $client = HttpClient::create(['verify_peer' => false]);        
+        $client = HttpClient::create(['verify_peer' => false]);
         $response = $client->request('GET', 'http://localhost:8000/message/read/1');
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -48,7 +48,7 @@ class MessagesControllerTest extends WebTestCase
 
     public function testDelete(): void
     {
-        $client = HttpClient::create(['verify_peer' => false]);   
+        $client = HttpClient::create(['verify_peer' => false]);
         $response = $client->request('DELETE', 'http://localhost:8000/message/delete/1');
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -57,7 +57,7 @@ class MessagesControllerTest extends WebTestCase
 
     public function testSent(): void
     {
-        $client = HttpClient::create(['verify_peer' => false]);   
+        $client = HttpClient::create(['verify_peer' => false]);
         $response = $client->request('GET', 'http://localhost:8000/message/sent');
 
         $this->assertEquals(200, $response->getStatusCode());
